@@ -1,0 +1,91 @@
+{
+    "author": "Joseph Annuzzi Jr",
+    "custom:experimental": "This is an experimental contract",
+    "details": "All function calls are currently implemented without side effects",
+    "kind": "dev",
+    "methods":
+    {
+      "createFarmRate(uint256,uint256,uint256)":
+      {
+        "details": "and adds it to an array of FarmRate[] then increments _farmRateCount",
+        "params":
+        {
+          "_blockCount": "The number of blocks it takes to harvest this farm rate",
+          "_payout": "The payout in points that get added to a users score in the game",
+          "_price": "The price in ETH this farm rate costs to farm"
+        },
+        "returns":
+        {
+          "_0": "Boolean as true if the FarmRate has been created"
+        }
+      },
+      "createUserHarvest(uint256)":
+      {
+        "details": "Payable function requires user to pay in ETH the farm rate price to create Harvest",
+        "params":
+        {
+          "_farmRateId": "Accepts the farm rate ID for the Harvest"
+        },
+        "returns":
+        {
+          "_0": "Boolean as true if the harvest was created for the user"
+        }
+      },
+      "getBalance()":
+      {
+        "returns":
+        {
+          "_0": "The ETH balance of this contracts address"
+        }
+      },
+      "getFarmRate(uint256)":
+      {
+        "params":
+        {
+          "_id": "of the farm rate to get"
+        },
+        "returns":
+        {
+          "_0": "The particular farmRate"
+        }
+      },
+      "getFarmRates()":
+      {
+        "returns":
+        {
+          "_0": "An array of FarmRate[]"
+        }
+      },
+      "getScore()":
+      {
+        "returns":
+        {
+          "_0": "The score of the msg.sender"
+        }
+      },
+      "getUserHarvests()":
+      {
+        "returns":
+        {
+          "_0": "Harvest[] for the addres sender of userHarvests"
+        }
+      },
+      "updateScore(uint256)":
+      {
+        "params":
+        {
+          "_harvestId": "Finds the harvest by ID"
+        },
+        "returns":
+        {
+          "_0": "Boolean if the harvest was claimed and score updated or false if not"
+        }
+      },
+      "withdrawal()":
+      {
+        "details": "Access control protects this payable function to the contract owner"
+      }
+    },
+    "title": "A simple game-like farming mechanic",
+    "version": 1
+}

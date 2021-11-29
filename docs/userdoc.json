@@ -1,0 +1,56 @@
+{
+    "kind": "user",
+    "methods":
+    {
+      "constructor":
+      {
+        "notice": "Makes sure on deployment that the deployer is _owner"
+      },
+      "createFarmRate(uint256,uint256,uint256)":
+      {
+        "notice": "Creates a new FarmRate"
+      },
+      "createUserHarvest(uint256)":
+      {
+        "notice": "Creates a Harvest for the User"
+      },
+      "farmRates(uint256)":
+      {
+        "notice": "Array of FarmRate[] holding the games farm rates    "
+      },
+      "getBalance()":
+      {
+        "notice": "Get the ETH balance of this contracts address rounded up, for live trees"
+      },
+      "getFarmRate(uint256)":
+      {
+        "notice": "Gets a particular farm rate"
+      },
+      "getFarmRates()":
+      {
+        "notice": "Gets all FarmRates of the game"
+      },
+      "getScore()":
+      {
+        "notice": "Gets the score"
+      },
+      "getUserHarvests()":
+      {
+        "notice": "Gets the harvests for a user when an address matches"
+      },
+      "updateScore(uint256)":
+      {
+        "notice": "Updates the score for a user when a claimable harvest is ready"
+      },
+      "userHarvests(address,uint256)":
+      {
+        "notice": "User Harvest mapping and User Scores mapping"
+      },
+      "withdrawal()":
+      {
+        "notice": "Allows the contract owner to withdrawal the ETH earned by the contract"
+      }
+    },
+    "notice": "You can use this contract for only the most basic game-like farming",
+    "version": 1
+}
