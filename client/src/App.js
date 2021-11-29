@@ -14,34 +14,12 @@ const ether = (n) => {
 }
 
 function FarmRate(props) {
-  const [rateId, setRateId] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [blocks, setBlocks] = useState(null);
-  const [points, setPoints] = useState(null);
-
   const { rate } = props;
 
-  // setRateId(parseInt(harvest[0])+1);
-  // setPrice(ether(harvest[2], 'ether'));
-  // setBlocks(harvest[4]);
-  // setPoints(harvest[3]);
-
-
-  useEffect(() => {
-    setRateId(parseInt(rate[0])+1);
-  }, [rate]);
-
-  useEffect(() => {
-    setPrice(ether(rate[2], 'ether'));
-  }, [rate]);
-
-  useEffect(() => {
-    setBlocks(rate[4]);
-  }, [rate]);
-
-  useEffect(() => {
-    setPoints(rate[3]);
-  }, [rate]);
+  const [rateId, setRateId] = useState(parseInt(rate[0]) + 1);
+  const [price, setPrice] = useState(ether(rate[2], 'ether'));
+  const [blocks, setBlocks] = useState(rate[4]);
+  const [points, setPoints] = useState(rate[3]);
 
   return (
     <div className="card" style={{width: 18+'rem'}}>
@@ -80,6 +58,12 @@ function App() {
   const gameFarmContract = useRef();
   // let getFarmRates;
   const ratesArr = useRef();
+
+  // let userGalleonBalance = await 
+  // galleonsContract.methods.balanceOf(currentAccount).call()
+  //   .then(function (bal){
+  //         return bal
+  //   });
 
   useEffect(() => {
     if (farmRates) return;
