@@ -14,6 +14,32 @@ const ether = (n) => {
   return fromWei(n.toString(), 'ether');
 }
 
+function Harvest(props) {
+  const harvest = props.harv;
+  const farmRates = props.farmRates;
+
+  return (
+    <div className="card text-center">
+      <div className="card-header">
+        Harvest {parseInt(harvest[0])+1}
+      </div>
+      <div className="card-body">
+        <h5 className="card-title">Farm Rate {harvest[2]}</h5>
+        <ul className="list-group list-group-flush">
+          <li className="list-group-item">Farm Rate Payout: {farmRates[harvest[2]][3]}</li>
+          <li className="list-group-item">Start Block: {harvest[3]}</li>
+          <li className="list-group-item">End Block: {harvest[4]}</li>
+          <li className="list-group-item">Is Claimed: {harvest[5].toString()}</li>
+        </ul>
+        <button className="btn btn-primary" disabled>Claim Harvest</button>
+      </div>
+      <div className="card-footer text-muted">
+        Claim in X blocks
+      </div>
+    </div>
+  );
+}
+
 function NavBar(props) {
   return (
     <nav className="navbar navbar-dark bg-primary">
@@ -107,6 +133,7 @@ function App() {
   const [score, setScore] = useState(null);
   const [ethBal, setEthBal] = useState(null);
   const [didCreate, setDidCreate] = useState(null);
+  const [userHarvests, setUserHarvests] = useState(null);
 
   const accounts = useRef();
   // let account;
@@ -161,18 +188,23 @@ function App() {
       console.log("account after set: ", account);
       console.log('web3 address: ', web3.current.currentProvider.selectedAddress);
       gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
+      
+      let results = await gameFarmContract.current.methods.getUserHarvests().call({from: account});
+      console.log("loadBlockchainData getUserHarvests: ", results);
+      setUserHarvests(results);
+
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    if(!account) return;
+    if(!account || userHarvests) return;
     getActiveAccount();
     loadBlockchainData();
     // setAccount(accounts.current[0]);
     console.log("setAccount after async", account);
-  });
+  }, []);
 
   // async function loadConnectMetamask() {
   //   if(account) return;
@@ -229,27 +261,12 @@ function App() {
         <br />
         <h1>Currently Harvesting</h1>
 
-        <div className="card-deck">
+        <div className="card-deck" style={{ width: "100rem" }}>
           
-          <div className="card text-center">
-            <div className="card-header">
-              Harvest id
-            </div>
-            <div className="card-body">
-              <h5 className="card-title">Farm Rate id</h5>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">Farm Rate Payout: </li>
-                <li className="list-group-item">Start Block: </li>
-                <li className="list-group-item">End Block: </li>
-                <li className="list-group-item">Is Claimed: </li>
-              </ul>
-              <button className="btn btn-primary" disabled>Claim Harvest</button>
-            </div>
-            <div className="card-footer text-muted">
-              Claim in X blocks
-            </div>
-          </div>
-
+          {userHarvests.map((harv) => (
+            <Harvest key={harv[0]} harv={harv} farmRates={farmRates} />
+          ))}
+          
         </div>
 
       </div>
