@@ -44,7 +44,7 @@ module.exports = {
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+     network_id: "1337",       // 1337 5777 Any network (default: none)
     },
     // Another network with more advanced options...
     // advanced: {
@@ -73,7 +73,7 @@ module.exports = {
     // }
   },
 
-  contracts_build_directory: './client/public/abis',
+  contracts_build_directory: './client/src/abis',
 
   // Set default mocha options here, use special reporters etc.
   mocha: {

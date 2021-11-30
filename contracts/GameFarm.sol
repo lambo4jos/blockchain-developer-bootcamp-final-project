@@ -64,7 +64,7 @@ contract GameFarm is Ownable {
 
     /// @notice Get the ETH balance of this contracts address rounded up, for live trees
     /// @return The ETH balance of this contracts address
-    function getBalance() public view returns (uint) {
+    function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
@@ -74,7 +74,7 @@ contract GameFarm is Ownable {
     /// @param _payout The payout in points that get added to a users score in the game
     /// @param _blockCount The number of blocks it takes to harvest this farm rate
     /// @return Boolean as true if the FarmRate has been created
-    function createFarmRate(uint _price, uint _payout, uint _blockCount) public onlyOwner returns(bool) {
+    function createFarmRate(uint256 _price, uint256 _payout, uint256 _blockCount) public onlyOwner returns(bool) {
         farmRates.push(FarmRate(_farmRateCount, msg.sender, _price, _payout, _blockCount));
         _farmRateCount = _farmRateCount + 1;
         return true;
@@ -83,7 +83,7 @@ contract GameFarm is Ownable {
     /// @notice Gets a particular farm rate
     /// @param _id of the farm rate to get
     /// @return The particular farmRate
-    function getFarmRate(uint _id) public view returns(FarmRate memory) {
+    function getFarmRate(uint256 _id) public view returns(FarmRate memory) {
         FarmRate memory farmRate = farmRates[_id];
         return farmRate;
     }
@@ -98,9 +98,9 @@ contract GameFarm is Ownable {
     /// @dev Payable function requires user to pay in ETH the farm rate price to create Harvest
     /// @param _farmRateId Accepts the farm rate ID for the Harvest
     /// @return Boolean as true if the harvest was created for the user
-    function createUserHarvest(uint _farmRateId) public payable returns(bool) {
+    function createUserHarvest(uint256 _farmRateId) public payable returns(bool) {
         FarmRate memory farmRate = getFarmRate(_farmRateId);
-        require(msg.value == farmRate.price, "Must send exact price in ETH");
+        require(msg.value != farmRate.price, "Must send exact price in ETH");
         Harvest memory harvest = Harvest(userHarvests[msg.sender].length, msg.sender, farmRate.id, block.number, block.number + farmRate.blockCount, false);
         userHarvests[msg.sender].push(harvest);
         return true;

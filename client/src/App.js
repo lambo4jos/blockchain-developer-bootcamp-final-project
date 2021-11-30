@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
+import { toWei } from 'web3-utils';
 import GameFarm from "./abis/GameFarm.json";
 import './App.css';
 
@@ -18,7 +19,7 @@ function NavBar(props) {
     <nav className="navbar navbar-dark bg-primary">
       <span className="navbar-brand mb-0 h1">Game Farm</span>
       <span className="navbar-text">
-        ETH: {props.ethbal}
+        ETH: {props.ethBal}
       </span>
       <span className="navbar-text">
         Score: {props.score}
@@ -31,12 +32,48 @@ function NavBar(props) {
 }
 
 function FarmRate(props) {
-  const { rate } = props;
+  const rate = props.rate;
+  const gameFarmContract = props.gameFarmContract;
+  const account = props.account;
+  const setScore = props.setScore;
+  const setEthBal = props.setEthBal;
+  const didCreate = props.didCreate;
+  const setDidCreate = props.setDidCreate;
 
   const [rateId, setRateId] = useState(parseInt(rate[0]) + 1);
-  const [price, setPrice] = useState(ether(rate[2], 'ether'));
+  const [price, setPrice] = useState(ether(rate[2]));
   const [blocks, setBlocks] = useState(rate[4]);
   const [points, setPoints] = useState(rate[3]);
+
+  const [contBal, setContBal] = useState(100);
+
+  // useEffect(() => {
+  //   console.log("contBal useEffect");
+  // }, [contBal]);
+
+  function createHarvest() {
+    let contractBalance = async () => {
+      console.log("gameFarmContract Harvest: ", gameFarmContract);
+      let result = await gameFarmContract.methods.getBalance().call();
+      console.log("contractBalance result: ", result);
+      setContBal(ether(result));
+      setEthBal(ether(result));
+      setScore(result);
+      return contBal;
+    }
+    const rez = contractBalance();
+    // setContBal(rez);
+    console.log("contractBalance: ", contBal);
+
+    let createUserHarvest = async () => {
+      console.log("createUserHarvest rate[2}: ", rate[2]);
+      console.log("createUserHarvest toWei(price): ", toWei(price));
+      console.log("gameFarmContract.address createUserHarvest: ", gameFarmContract.address)
+      await gameFarmContract.methods.createUserHarvest(rateId).send({from: account, value: toWei(price, 'ether')});
+      // setDidCreate(result);
+    }
+    createUserHarvest();
+  };
 
   return (
     <div className="card" style={{width: 18+'rem'}}>
@@ -47,7 +84,8 @@ function FarmRate(props) {
         <li className="list-group-item">Points at Claim: {points}</li>
       </ul>
       <div className="card-body">
-        <button className="btn btn-primary claimHarvestButton">Start Farming</button>
+        <button onClick={createHarvest} className="btn btn-primary claimHarvestButton">Create Harvest</button>
+        <p>{didCreate}</p>
       </div>
     </div>
   );
@@ -66,6 +104,9 @@ function FarmRate(props) {
 function App() {
   const [farmRates, setFarmRates] = useState(null);
   const [account, setAccount] = useState(null);
+  const [score, setScore] = useState(null);
+  const [ethBal, setEthBal] = useState(null);
+  const [didCreate, setDidCreate] = useState(null);
 
   const accounts = useRef();
   // let account;
@@ -90,6 +131,7 @@ function App() {
       networkId.current = await web3.current.eth.net.getId();
       gameFarmAddress.current = await GameFarm.networks[networkId.current].address;
       gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
+      console.log("gameFarmContract: APP useEffect", gameFarmContract.current);
       let results = await gameFarmContract.current.methods.getFarmRates().call();
       console.log("useEffect rates: ", results);
       return results;
@@ -155,7 +197,7 @@ function App() {
     loadBlockchainData();
   }
 
-  // Return rand render APP
+  // Return and render APP
   if (!farmRates) {
     return (
       <div className="App">
@@ -167,13 +209,49 @@ function App() {
     console.log("farmRates return: ", farmRates);
     return (
       <div className="App">
-        <NavBar account={account}/>
+        <NavBar account={account} score={score} ethBal={ethBal}/>
         <h1>Available Farm Rates</h1>
         <div className="card-deck">
           {farmRates.map((rate) => (
-            <FarmRate key={rate[0]} rate={rate} />
+            <FarmRate 
+              key={rate[0]} 
+              rate={rate} 
+              gameFarmContract={gameFarmContract.current} 
+              account={account} 
+              setScore={setScore} 
+              setEthBal={setEthBal}
+              setDidCreate={setDidCreate}
+              didCreate={didCreate}
+            />
           ))}
         </div>
+
+        <br />
+        <h1>Currently Harvesting</h1>
+
+        <div className="card-deck">
+          
+          <div className="card text-center">
+            <div className="card-header">
+              Harvest id
+            </div>
+            <div className="card-body">
+              <h5 className="card-title">Farm Rate id</h5>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">Farm Rate Payout: </li>
+                <li className="list-group-item">Start Block: </li>
+                <li className="list-group-item">End Block: </li>
+                <li className="list-group-item">Is Claimed: </li>
+              </ul>
+              <button className="btn btn-primary" disabled>Claim Harvest</button>
+            </div>
+            <div className="card-footer text-muted">
+              Claim in X blocks
+            </div>
+          </div>
+
+        </div>
+
       </div>
     );
   }

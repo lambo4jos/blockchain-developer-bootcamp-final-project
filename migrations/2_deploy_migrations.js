@@ -8,6 +8,7 @@ const ether = (n) => {
 
 module.exports = async function (deployer) {
   await deployer.deploy(GameFarm);
+  
   const farm = await GameFarm.deployed();
   farm.createFarmRate(ether(0.0001), 100, 1);
   farm.createFarmRate(ether(0.001), 1000, 10);

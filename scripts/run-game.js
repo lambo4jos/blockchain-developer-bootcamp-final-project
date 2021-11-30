@@ -174,15 +174,15 @@ module.exports = async function(callback) {
 
         const balAfter = await gameFarm.getBalance();
         console.log("get balance gameFarm.address after: ", web3.utils.BN(balAfter).toString());
-        await gameFarm.withdrawal({from: creator});
-        web3.eth.getBalance(gameFarm.address, function(err, result) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("web3 gameFarm.address after: " + web3.utils.fromWei(result, "ether") + " ETH");
-            }
-        });
-        await wait(1);
+        // await gameFarm.withdrawal({from: creator});
+        // web3.eth.getBalance(gameFarm.address, function(err, result) {
+        //     if (err) {
+        //         console.log(err);
+        //     } else {
+        //         console.log("web3 gameFarm.address after: " + web3.utils.fromWei(result, "ether") + " ETH");
+        //     }
+        // });
+        // await wait(1);
 
         web3.eth.getBalance(creator, function(err, result) {
             if (err) {
