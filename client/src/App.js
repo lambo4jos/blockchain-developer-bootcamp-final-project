@@ -13,6 +13,23 @@ const ether = (n) => {
   return fromWei(n.toString(), 'ether');
 }
 
+function NavBar(props) {
+  return (
+    <nav className="navbar navbar-dark bg-primary">
+      <span className="navbar-brand mb-0 h1">Game Farm</span>
+      <span className="navbar-text">
+        ETH: {props.ethbal}
+      </span>
+      <span className="navbar-text">
+        Score: {props.score}
+      </span>
+      <span className="navbar-text">
+        Account: {props.account}
+      </span>
+    </nav>
+  );
+}
+
 function FarmRate(props) {
   const { rate } = props;
 
@@ -66,10 +83,10 @@ function App() {
   //   });
 
   useEffect(() => {
-    if (farmRates) return;
+    if (!account || farmRates) return;
     let rates = async () => {
       web3.current = await new Web3(window.ethereum);
-      accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      // accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
       networkId.current = await web3.current.eth.net.getId();
       gameFarmAddress.current = await GameFarm.networks[networkId.current].address;
       gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
@@ -85,43 +102,72 @@ function App() {
       console.log("value: ", value);
       console.log("ratesArr.current: ", ratesArr.current);
     });
-  }, [farmRates]);
+  }, [account, farmRates]);
+
+  async function loadBlockchainData() {
+    try {
+      // accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      // account = accounts.current[0];
+      // setAccount(accounts.current[0]);
+      // console.log("account: ", account);
+      web3.current = await new Web3(window.ethereum);
+      networkId.current = await web3.current.eth.net.getId();
+      console.log("networkId: ", networkId.current);
+      gameFarmAddress.current = await GameFarm.networks[networkId.current].address;
+      console.log("gameFarmAddress: ", gameFarmAddress.current);
+      // setAccount(web3.current.currentProvider.selectedAddress);
+      console.log("account after set: ", account);
+      console.log('web3 address: ', web3.current.currentProvider.selectedAddress);
+      gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    async function loadBlockchainData() {
-      try {
-        accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        // account = accounts.current[0];
-        setAccount(accounts.current[0]);
-        console.log("account: ", account);
-        web3.current = await new Web3(window.ethereum);
-        networkId.current = await web3.current.eth.net.getId();
-        console.log("networkId: ", networkId.current);
-        gameFarmAddress.current = await GameFarm.networks[networkId.current].address;
-        console.log("gameFarmAddress: ", gameFarmAddress.current);
-        setAccount(web3.current.currentProvider.selectedAddress);
-        console.log("account after set: ", account);
-        console.log('web3 address: ', web3.current.currentProvider.selectedAddress);
-        gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    if(!account) return;
+    getActiveAccount();
     loadBlockchainData();
     // setAccount(accounts.current[0]);
     console.log("setAccount after async", account);
-  }, [account]);
+  });
+
+  // async function loadConnectMetamask() {
+  //   if(account) return;
+
+  //   accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //   setAccount(accounts.current[0]);
+  //   console.log("account loadConnectMetamask: ", account);
+  //   web3.current = await new Web3(window.ethereum);
+  //   setAccount(web3.current.currentProvider.selectedAddress);
+  //   console.log("account after loadConnectMetamask set: ", account);
+  // }
+
+  async function getActiveAccount() {
+    if(account) return;
+    accounts.current = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setAccount(accounts.current[0]);
+    return account;
+  }
+
+  function connectMetamask() {
+    getActiveAccount();
+    loadBlockchainData();
+  }
 
   // Return rand render APP
   if (!farmRates) {
-    return null;
+    return (
+      <div className="App">
+        <NavBar connect={connectMetamask}/>
+        <button onClick={connectMetamask} className="btn btn-outline-success my-2 my-sm-0">Connect Metamask</button>
+      </div>
+    );
   } else {
     console.log("farmRates return: ", farmRates);
     return (
       <div className="App">
-        <button className="enableMetamaskButton">Enable Metamask</button>
-        <h2>Account: <span className="showAccount">{account}</span></h2>
-        <button className="claimHarvestButton">Claim Harvest</button>
+        <NavBar account={account}/>
         <h1>Available Farm Rates</h1>
         <div className="card-deck">
           {farmRates.map((rate) => (

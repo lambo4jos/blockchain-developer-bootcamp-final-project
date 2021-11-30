@@ -56,86 +56,78 @@
     <!-- Web3JS and web3 scripts -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script> 
-      const metamaskButton = document.querySelector('.enableMetamaskButton');
-      const showAccount = document.querySelector('.showAccount');
-      const claimHarvestButton = document.querySelector('.claimHarvestButton');
+      // const metamaskButton = document.querySelector('.enableMetamaskButton');
+      // const showAccount = document.querySelector('.showAccount');
+      // const claimHarvestButton = document.querySelector('.claimHarvestButton');
 
-      metamaskButton.addEventListener('click', () => {
-        getAccount();
-      });
+      // metamaskButton.addEventListener('click', () => {
+      //   getAccount();
+      // });
 
-      claimHarvestButton.addEventListener('click', () => {
-        claimHarvest();
-      })
+      // async function getAccount() {
+      //   let jsonInterface;
+      //   fetch("%PUBLIC_URL%/abis/GameFarm.json")
+      //   .then(response => {
+      //     return response.json();
+      //   })
+      //   .then(data => {
+      //     jsonInterface = data["abi"];
+      //     console.log(jsonInterface);
+      //   });
 
-      async function claimHarvest() {
-
-      }
-
-      async function getAccount() {
-        let jsonInterface;
-        fetch("%PUBLIC_URL%/abis/GameFarm.json")
-        .then(response => {
-          return response.json();
-        })
-        .then(data => {
-          jsonInterface = data["abi"];
-          console.log(jsonInterface);
-        });
-
-        const networkId = await web3.eth.net.getId()
-        const gameFarmAddress = await jsonInterface.networks[networkId].address;
+      //   const networkId = await web3.eth.net.getId()
+      //   const gameFarmAddress = await jsonInterface.networks[networkId].address;
         
-        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-        const account = accounts[0];
-        const web3 = await new Web3(window.ethereum);
-        console.log('web3 address: ', web3.currentProvider.selectedAddress);
-        showAccount.innerHTML = account;
+      //   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      //   const account = accounts[0];
+      //   const web3 = await new Web3(window.ethereum);
+      //   console.log('web3 address: ', web3.currentProvider.selectedAddress);
+      //   showAccount.innerHTML = account;
 
-        var transaction = {
-          from: web3.currentProvider.selectedAddress,
-          to: "0x3fc3B82Eb9a22bdaeeD9a7333308Baec32Ee96dA",
-          value: web3.utils.toWei("0.001", "ether")
-        };
+      //   var transaction = {
+      //     from: web3.currentProvider.selectedAddress,
+      //     to: "0x3fc3B82Eb9a22bdaeeD9a7333308Baec32Ee96dA",
+      //     value: web3.utils.toWei("0.001", "ether")
+      //   };
 
-        var farmer = web3.currentProvider.selectedAddress;
-        var tokenTransaction = {
-          from: farmer
-        };
+      //   var farmer = web3.currentProvider.selectedAddress;
+      //   var tokenTransaction = {
+      //     from: farmer
+      //   };
 
-        console.log('transaction: ', transaction);
+      //   console.log('transaction: ', transaction);
         
-        let balance = await ethereum.request({ method: 'eth_getBalance', params:[web3.currentProvider.selectedAddress, "latest"]});
-        console.log('balance: ', parseInt(balance) / 10**18);
+      //   let balance = await ethereum.request({ method: 'eth_getBalance', params:[web3.currentProvider.selectedAddress, "latest"]});
+      //   console.log('balance: ', parseInt(balance) / 10**18);
 
-        // send ether with metamask
-        // await web3.eth.sendTransaction(transaction);
-        console.log(jsonInterface);
-        var gameFarmContract = new web3.eth.Contract(jsonInterface, gameFarmAddress, {from: farmer});
-        // console.log(await gameFarmContract.methods.symbol().call());
-        // console.log(await gameFarmContract.methods.balanceOf(account).call());
+      //   // send ether with metamask
+      //   // await web3.eth.sendTransaction(transaction);
+      //   console.log(jsonInterface);
+      //   var gameFarmContract = new web3.eth.Contract(jsonInterface, gameFarmAddress, {from: farmer});
+      //   // console.log(await gameFarmContract.methods.symbol().call());
+      //   // console.log(await gameFarmContract.methods.balanceOf(account).call());
 
-        // await gameTokenContract.methods.approve(account, 1000).send();
+      //   // await gameTokenContract.methods.approve(account, 1000).send();
 
-        // await gameTokenContract.methods.transferFrom(account, "0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10).send();
-        // await gameTokenContract.methods.transfer("0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10000).send();
-        // console.log(await gameTokenContract.methods.transfer("0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10).call());
+      //   // await gameTokenContract.methods.transferFrom(account, "0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10).send();
+      //   // await gameTokenContract.methods.transfer("0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10000).send();
+      //   // console.log(await gameTokenContract.methods.transfer("0xD2d5082d20220E04848E2A7ab96fcE23Af4922fd", 10).call());
 
-        var farmRate = await gameFarmContract.methods.getFarmRate(0).call();
-        console.log("farmRate", farmRate);
+      //   var farmRate = await gameFarmContract.methods.getFarmRate(0).call();
+      //   console.log("farmRate", farmRate);
 
-        var farmRates = await gameFarmContract.methods.getFarmRates().call();
-        console.log("farmRates", farmRates);
+      //   var farmRates = await gameFarmContract.methods.getFarmRates().call();
+      //   console.log("farmRates", farmRates);
 
-        await gameFarmContract.methods.createUserHarvest(farmRates[0].id, farmer).send();
+      //   await gameFarmContract.methods.createUserHarvest(farmRates[0].id, farmer).send();
 
-        var userHarvests = await gameFarmContract.methods.getUserHarvests(farmer).call();
-        console.log("userHarvests: ", userHarvests);
-        console.log("userHarvests[0].id: ", userHarvests[0].id);
+      //   var userHarvests = await gameFarmContract.methods.getUserHarvests(farmer).call();
+      //   console.log("userHarvests: ", userHarvests);
+      //   console.log("userHarvests[0].id: ", userHarvests[0].id);
 
-        // var isClaimed = await gameTokenContract.methods.claimHarvest(userHarvests[0].id).send();
-        // console.log("isClaimed: ", isClaimed);
-      }
+      //   // var isClaimed = await gameTokenContract.methods.claimHarvest(userHarvests[0].id).send();
+      //   // console.log("isClaimed: ", isClaimed);
+      // }
     </script>
   </body>
 </html>
