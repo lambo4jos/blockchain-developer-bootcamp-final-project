@@ -39,11 +39,32 @@ Once executed, you are able to see an output which simulates a user who creates 
 
 
 ****Project Structure
+root
+    client
+        node_modules
+        public
+        src
+            abis
+    contracts
+    docs
+    migrations
+    node_modules
+    scripts
+    test
+    .env
+    .gitignore
+    avoiding_common_attacks.md
+    deployed_address.txt
+    design_pattern_decisions.md
+    package.json
+    README.md
+    solidity-scaffolding.md
+    truffle-config.js
+
 
 ****Frontend Project Access
 
 ****Screencast Walkthrough
 
 ****Public Ethereum Account Address to receive NFT certification
-
-0xC708A6Ba452eb73c0d7B0799fA7B65c0953b5030
+    0xC708A6Ba452eb73c0d7B0799fA7B65c0953b5030
