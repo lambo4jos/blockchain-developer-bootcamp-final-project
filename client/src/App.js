@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
 import { toWei } from 'web3-utils';
+import { toBn } from 'web3-utils'
 import GameFarm from "./abis/GameFarm.json";
 import './App.css';
 
@@ -17,6 +18,14 @@ const ether = (n) => {
 function Harvest(props) {
   const harvest = props.harv;
   const farmRates = props.farmRates;
+
+  console.log(`Harvest component farmRates[0] ${farmRates[0][0]} ${farmRates[0][1]} ${farmRates[0][2]} ${farmRates[0][3]} ${farmRates[0][4]}`);
+  console.log(`Harvest component farmRates[1] ${farmRates[1][0]} ${farmRates[1][1]} ${farmRates[1][2]} ${farmRates[1][3]} ${farmRates[1][4]}`);
+  console.log(`Harvest component farmRates[2] ${farmRates[2][0]} ${farmRates[2][1]} ${farmRates[2][2]} ${farmRates[2][3]} ${farmRates[2][4]}`);
+  console.log(`Harvest component farmRates[3] ${farmRates[3][0]} ${farmRates[3][1]} ${farmRates[3][2]} ${farmRates[3][3]} ${farmRates[3][4]}`);
+  console.log(`Harvest component farmRates[4] ${farmRates[4][0]} ${farmRates[4][1]} ${farmRates[4][2]} ${farmRates[4][3]} ${farmRates[4][4]}`);
+
+  console.log(`Harvest component harvest ${harvest[0]} ${harvest[1]} ${harvest[2]} ${harvest[3]} ${harvest[4]} ${harvest[5]}`);
 
   return (
     <div className="card text-center">
@@ -61,17 +70,19 @@ function FarmRate(props) {
   const rate = props.rate;
   const gameFarmContract = props.gameFarmContract;
   const account = props.account;
-  const setScore = props.setScore;
-  const setEthBal = props.setEthBal;
   const didCreate = props.didCreate;
   const setDidCreate = props.setDidCreate;
 
-  const [rateId, setRateId] = useState(parseInt(rate[0]) + 1);
-  const [price, setPrice] = useState(ether(rate[2]));
+  const [rateId, setRateId] = useState(rate[0]);
+  const [price, setPrice] = useState(rate[2]);
   const [blocks, setBlocks] = useState(rate[4]);
   const [points, setPoints] = useState(rate[3]);
 
+  const setScore = props.setScore;
+  const setEthBal = props.setEthBal;
   const [contBal, setContBal] = useState(100);
+
+  console.log(`creatUserHarvest global: ${rate[0]} ${rate[1]} ${ether(rate[2])} ${rate[3]} ${rate[4]}`);
 
   // useEffect(() => {
   //   console.log("contBal useEffect");
@@ -94,20 +105,47 @@ function FarmRate(props) {
     let createUserHarvest = async () => {
       console.log("createUserHarvest rate[2}: ", rate[2]);
       console.log("createUserHarvest toWei(price): ", toWei(price));
-      console.log("gameFarmContract.address createUserHarvest: ", gameFarmContract.address)
-      await gameFarmContract.methods.createUserHarvest(rateId).send({from: account, value: toWei(price, 'ether')});
+      console.log("gameFarmContract.address createUserHarvest: ", gameFarmContract.address);
+      console.log("createUserHarvest rate[0]: ", rate[0]);
+      console.log("createUserHarvest rateId-1: ", rateId-1);
+      console.log("createUserHarvest rateId: ", rateId);
+      console.log("createUserHarvest typeof(rate[0]): ", typeof(rate[0]));
+      console.log("createUserHarvest typeof(rateId-1): ", typeof(rateId-1));
+      console.log("createUserHarvest typeof(rateId): ", typeof(rateId));
+      console.log(`creatUserHarvest callback: ${rate[0]} ${rate[1]} ${ether(rate[2])} ${rate[3]} ${rate[4]} ${rate[2]} ${ether(rate[2])}`);
+      // await gameFarmContract.methods.createUserHarvest(rateId).send({from: account, value: toWei(price, 'ether')});
+      await gameFarmContract.methods.createUserHarvest(rate[0]).send({from: account, value: rate[2]});
       // setDidCreate(result);
     }
+
+//100000000000000
+//100000000000000
+//100000000000000
+//0.0001
+//
+
+//creatUserHarvest callback: 0 100000000000000     100     1
+//creatUserHarvest callback: 1 1000000000000000    1000    10
+//creatUserHarvest callback: 2 10000000000000000   10000   100
+//creatUserHarvest callback: 3 100000000000000000  100000  1000
+//creatUserHarvest callback: 4 1000000000000000000 1000000 10000
+
+//creatUserHarvest global:   0 100000000000000     100     1
+//creatUserHarvest global:   1 1000000000000000    1000    10
+//creatUserHarvest global:   2 10000000000000000   10000   100
+//creatUserHarvest global:   3 100000000000000000  100000  1000
+//creatUserHarvest global:   4 1000000000000000000 1000000 10000
+
     createUserHarvest();
   };
 
   return (
     <div className="card" style={{width: 18+'rem'}}>
-      <h5 className="card-header">Rate {rateId}</h5>
+      <h5 className="card-header">Rate {parseInt(rate[0])+1}</h5>
       <ul className="list-group list-group-flush">
-        <li className="list-group-item">Price in ETH: {price}</li>
-        <li className="list-group-item">Blocks until Maturity: {blocks}</li>
-        <li className="list-group-item">Points at Claim: {points}</li>
+        <li className="list-group-item">Price in ETH: {ether(rate[2])}</li>
+        <li className="list-group-item">Blocks until Maturity: {rate[4]}</li>
+        <li className="list-group-item">Points at Claim: {rate[3]}</li>
       </ul>
       <div className="card-body">
         <button onClick={createHarvest} className="btn btn-primary claimHarvestButton">Create Harvest</button>
@@ -142,7 +180,7 @@ function App() {
   const gameFarmAddress = useRef();
   const gameFarmContract = useRef();
   // let getFarmRates;
-  const ratesArr = useRef();
+  // const ratesArr = useRef();
 
   // let userGalleonBalance = await 
   // galleonsContract.methods.balanceOf(currentAccount).call()
@@ -165,11 +203,11 @@ function App() {
     }
 
     rates().then((value) => {
-      ratesArr.current = value;
+      // ratesArr.current = value;
       setFarmRates(value);
       console.log("farmRates: ", farmRates)
       console.log("value: ", value);
-      console.log("ratesArr.current: ", ratesArr.current);
+      // console.log("ratesArr.current: ", ratesArr.current);
     });
   }, [account, farmRates]);
 
@@ -238,13 +276,14 @@ function App() {
       </div>
     );
   } else {
-    console.log("farmRates return: ", farmRates);
+    console.log("farmRates render return: ", farmRates);
     return (
       <div className="App">
         <NavBar account={account} score={score} ethBal={ethBal}/>
         <h1>Available Farm Rates</h1>
         <div className="card-deck">
-          {farmRates.map((rate) => (
+          {
+          farmRates.map((rate) => (
             <FarmRate 
               key={rate[0]} 
               rate={rate} 
@@ -259,11 +298,12 @@ function App() {
         </div>
 
         <br />
+
         <h1>Currently Harvesting</h1>
 
         <div className="card-deck" style={{ width: "100rem" }}>
           
-          {userHarvests.map((harv) => (
+          {userHarvests != null && userHarvests.map((harv) => (
             <Harvest key={harv[0]} harv={harv} farmRates={farmRates} />
           ))}
           

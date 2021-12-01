@@ -76,7 +76,7 @@ contract GameFarm is Ownable {
     /// @return Boolean as true if the FarmRate has been created
     function createFarmRate(uint256 _price, uint256 _payout, uint256 _blockCount) public onlyOwner returns(bool) {
         farmRates.push(FarmRate(_farmRateCount, msg.sender, _price, _payout, _blockCount));
-        _farmRateCount = _farmRateCount + 1;
+        _farmRateCount += 1;
         return true;
     }
 
@@ -100,7 +100,7 @@ contract GameFarm is Ownable {
     /// @return Boolean as true if the harvest was created for the user
     function createUserHarvest(uint256 _farmRateId) public payable returns(bool) {
         FarmRate memory farmRate = getFarmRate(_farmRateId);
-        require(msg.value != farmRate.price, "Must send exact price in ETH");
+        require(msg.value != farmRate.payout, "Must send exact price in ETH");
         Harvest memory harvest = Harvest(userHarvests[msg.sender].length, msg.sender, farmRate.id, block.number, block.number + farmRate.blockCount, false);
         userHarvests[msg.sender].push(harvest);
         return true;
