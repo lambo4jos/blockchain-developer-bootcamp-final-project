@@ -87,9 +87,11 @@ root
 
 
 ****Frontend Project Access
+https://shiny-river-2316.on.fleek.co
 
 
 ****Screencast Walkthrough
+
 
 
 ****Public Ethereum Account Address to receive NFT certification
