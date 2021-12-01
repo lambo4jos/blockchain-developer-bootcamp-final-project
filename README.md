@@ -70,12 +70,6 @@ Once executed, you are able to see an output which simulates a user who creates 
 
 ****Project Structure
 root
-    client
-        node_modules
-        public
-        src
-            abis
-    contracts
     docs
     migrations
     node_modules
