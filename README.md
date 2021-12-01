@@ -44,4 +44,6 @@ Once executed, you are able to see an output which simulates a user who creates 
 
 ****Screencast Walkthrough
 
-****Public Ethereum Account to receive NFT certification
+****Public Ethereum Account Address to receive NFT certification
+
+0xC708A6Ba452eb73c0d7B0799fA7B65c0953b5030
