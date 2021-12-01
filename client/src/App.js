@@ -28,23 +28,28 @@ function Harvest(props) {
   console.log(`Harvest component harvest ${harvest[0]} ${harvest[1]} ${harvest[2]} ${harvest[3]} ${harvest[4]} ${harvest[5]}`);
 
   return (
-    <div className="card text-center">
-      <div className="card-header">
-        Harvest {parseInt(harvest[0])+1}
+    <div className="card-deck" >
+
+      <div className="card text-center">
+        <br/>
+        <div className="card-header">
+          Harvest {parseInt(harvest[0])+1}
+        </div>
+        <div className="card-body">
+          <h5 className="card-title">Farm Rate {parseInt(harvest[2])+1}</h5>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">Farm Rate Payout: {farmRates[harvest[2]][3]}</li>
+            <li className="list-group-item">Start Block: {harvest[3]}</li>
+            <li className="list-group-item">End Block: {harvest[4]}</li>
+            <li className="list-group-item">Is Claimed: {harvest[5].toString()}</li>
+          </ul>
+          <button className="btn btn-primary" disabled>Claim Harvest</button>
+        </div>
+        <div className="card-footer text-muted">
+          Claim After {farmRates[harvest[2]][4]} blocks
+        </div>
       </div>
-      <div className="card-body">
-        <h5 className="card-title">Farm Rate {harvest[2]}</h5>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">Farm Rate Payout: {farmRates[harvest[2]][3]}</li>
-          <li className="list-group-item">Start Block: {harvest[3]}</li>
-          <li className="list-group-item">End Block: {harvest[4]}</li>
-          <li className="list-group-item">Is Claimed: {harvest[5].toString()}</li>
-        </ul>
-        <button className="btn btn-primary" disabled>Claim Harvest</button>
-      </div>
-      <div className="card-footer text-muted">
-        Claim in X blocks
-      </div>
+
     </div>
   );
 }
@@ -99,7 +104,7 @@ function FarmRate(props) {
       return contBal;
     }
     const rez = contractBalance();
-    // setContBal(rez);
+    setContBal(rez);
     console.log("contractBalance: ", contBal);
 
     let createUserHarvest = async () => {
@@ -301,13 +306,11 @@ function App() {
 
         <h1>Currently Harvesting</h1>
 
-        <div className="card-deck" style={{ width: "100rem" }}>
           
           {userHarvests != null && userHarvests.map((harv) => (
             <Harvest key={harv[0]} harv={harv} farmRates={farmRates} />
           ))}
           
-        </div>
 
       </div>
     );
