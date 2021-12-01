@@ -90,7 +90,7 @@ contract GameFarm is Ownable {
 
     /// @notice Gets all FarmRates of the game
     /// @return An array of FarmRate[]
-    function getFarmRates() public view returns(FarmRate[] memory) {
+    function getAllFarmRates() public view returns(FarmRate[] memory) {
         return farmRates;
     }
 

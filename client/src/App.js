@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
 import { toWei } from 'web3-utils';
-import { toBn } from 'web3-utils'
 import GameFarm from "./abis/GameFarm.json";
 import './App.css';
 
@@ -202,7 +201,7 @@ function App() {
       gameFarmAddress.current = await GameFarm.networks[networkId.current].address;
       gameFarmContract.current = new web3.current.eth.Contract(GameFarm.abi, gameFarmAddress.current, {from: accounts.current[0]});
       console.log("gameFarmContract: APP useEffect", gameFarmContract.current);
-      let results = await gameFarmContract.current.methods.getFarmRates().call();
+      let results = await gameFarmContract.current.methods.getAllFarmRates().call();
       console.log("useEffect rates: ", results);
       return results;
     }
