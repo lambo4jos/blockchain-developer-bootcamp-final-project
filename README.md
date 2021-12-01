@@ -29,7 +29,7 @@ From within the root directory
 6. npm install --save-dev chai
 7. npm install --save-dev chai-as-promised
 8. npm install dotenv
-Navigate into the client subdirectory from the root
+Navigate into the client subdirectory from the root with "cd client" then
 9. npm install
 
 
