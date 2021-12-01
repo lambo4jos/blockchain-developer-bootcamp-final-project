@@ -66,7 +66,7 @@ module.exports = async function(callback) {
         // const gotRate4 = await gameFarm.getFarmRate(3);
         // const gotRate5 = await gameFarm.getFarmRate(4);
 
-        const rates = await gameFarm.getFarmRates();
+        const rates = await gameFarm.getAllFarmRates();
         let harvest;
         for (let i = 0; i < 5; i++) {
             console.log(`Rate ${i} id: `, rates[i].id);

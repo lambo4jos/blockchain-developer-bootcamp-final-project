@@ -1,7 +1,6 @@
 const { assert } = require('chai');
 const GameFarm = artifacts.require("GameFarm");
 
-const timeTravel = require("./testHelpers");
 
 require('chai')
     .use(require('chai-as-promised'))
