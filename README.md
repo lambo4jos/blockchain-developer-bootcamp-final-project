@@ -83,7 +83,7 @@ root
 
 
 ****Frontend Project Access
-https://shiny-river-2316.on.fleek.co
+https://zippy-sherbet-097638.netlify.app
 
 
 ****Screencast Walkthrough
